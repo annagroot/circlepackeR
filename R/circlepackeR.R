@@ -21,8 +21,6 @@
 #' @export
 circlepackeR <- function(data,
                          size = "size",
-                         color_min = "hsl(152,80%,80%)",
-                         color_max = "hsl(228,30%,40%)",
                          title = NULL,
                          footer = NULL,
                          width = NULL,
@@ -35,7 +33,6 @@ circlepackeR <- function(data,
       auto_unbox = TRUE,
       dataframe = "rows"
     )
-
   } else if (inherits(data, "list")) {  # accept hierarchical list
     data = jsonlite::toJSON(data, auto_unbox = TRUE)
 
@@ -45,7 +42,7 @@ circlepackeR <- function(data,
     data = jsonlite::toJSON(data, auto_unbox = TRUE)
 
   } else {
-    stop("Please provide a json object or list", call. = FALSE)
+    stop("Please provide a json object, list, or data.tree Node", call. = FALSE)
   }
 
   # create a list that contains the data and new options
@@ -53,8 +50,6 @@ circlepackeR <- function(data,
     data = data,
     options = list(
       size = size,
-      color_min = color_min,
-      color_max = color_max,
       title = title,
       footer = footer
     )
@@ -69,6 +64,7 @@ circlepackeR <- function(data,
     package = 'circlepackeR'
   )
 }
+
 
 #' Widget output function for use in Shiny
 #'
