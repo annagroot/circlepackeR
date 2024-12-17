@@ -19,8 +19,14 @@
 #' @import htmlwidgets
 #'
 #' @export
-circlepackeR <- function(data, size = "size", color_min = "hsl(152,80%,80%)",
-                         color_max = "hsl(228,30%,40%)", width = NULL, height = NULL) {
+circlepackeR <- function(data,
+                         size = "size",
+                         color_min = "hsl(152,80%,80%)",
+                         color_max = "hsl(228,30%,40%)",
+                         title = NULL,
+                         footer = NULL,
+                         width = NULL,
+                         height = NULL) {
 
   # accept JSON
   if (inherits(data, c("character", "connection", "json"))) {
@@ -42,13 +48,15 @@ circlepackeR <- function(data, size = "size", color_min = "hsl(152,80%,80%)",
     stop("Please provide a json object or list", call. = FALSE)
   }
 
-  # create a list that contains the data
+  # create a list that contains the data and new options
   x = list(
     data = data,
     options = list(
       size = size,
       color_min = color_min,
-      color_max = color_max
+      color_max = color_max,
+      title = title,
+      footer = footer
     )
   )
 
@@ -76,3 +84,6 @@ renderCirclepackeR <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) } # force quoted
   htmlwidgets::shinyRenderWidget(expr, circlepackeROutput, env, quoted = TRUE)
 }
+
+
+

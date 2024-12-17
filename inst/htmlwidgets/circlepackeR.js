@@ -5,11 +5,7 @@ HTMLWidgets.widget({
   type: 'output',
 
   initialize: function(el, width, height) {
-
-    return {
-
-    }
-
+    return {};
   },
 
   renderValue: function(el, x, instance) {
@@ -17,12 +13,17 @@ HTMLWidgets.widget({
     // remove previous in case of dynamic/Shiny
     d3.select(el).selectAll('*').remove();
 
-    // much of this code is based on this example by Mike Bostock
-    //   https://gist.github.com/mbostock/7607535
+    // If a title is defined, add it above the visualization
+    if (x.options.title) {
+      d3.select(el).append("div")
+        .attr("class", "circlepacker-title")
+        .style("text-align", "center")
+        .style("font-weight", "bold")
+        .style("margin-bottom", "10px")
+        .text(x.options.title);
+    }
 
     var margin = 20,
-    // use getBoundingClientRect since width and height
-    //  might not be in pixels
     diameter = Math.min(el.getBoundingClientRect().width,
                         el.getBoundingClientRect().height);
 
@@ -34,7 +35,7 @@ HTMLWidgets.widget({
     var pack = d3.layout.pack()
         .padding(2)
         .size([diameter - margin, diameter - margin])
-        .value(function(d) { return d[x.options.size]; })
+        .value(function(d) { return d[x.options.size]; });
 
     var svg = d3.select(el).append("svg")
         .attr("width", diameter)
@@ -58,12 +59,14 @@ HTMLWidgets.widget({
           .data(nodes)
         .enter().append("text")
           .attr("class", "label")
+          // Make the text bold
+          .style("font-weight", "bold")
           .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
           .style("display", function(d) { return d.parent === root ? null : "none"; })
           .text(function(d) {
-      return d[x.options.size] ? d.name + " (" + d[x.options.size] + ")" : d.name;
+            // Include the count in (n=X) format if available
+            return d[x.options.size] ? d.name + " (n=" + d[x.options.size] + ")" : d.name;
           });
-
 
       var node = svg.selectAll("circle,text");
 
@@ -77,7 +80,7 @@ HTMLWidgets.widget({
 
         var transition = d3.transition()
             .duration(d3.event.altKey ? 7500 : 750)
-            .tween("zoom", function(d) {
+            .tween("zoom", function() {
               var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
               return function(t) { zoomTo(i(t)); };
             });
@@ -96,14 +99,22 @@ HTMLWidgets.widget({
       }
     }
 
-    createViz(x.data)
+    createViz(x.data);
+
+    // Add footer if provided
+    if (x.options.footer) {
+      d3.select(el).append("div")
+        .attr("class", "circlepacker-footer")
+        .style("text-align", "center")
+        .style("margin-top", "10px")
+        .text(x.options.footer);
+    }
 
     d3.select(self.frameElement).style("height", diameter + "px");
-
   },
 
   resize: function(el, width, height, instance) {
-
+    // Add resize logic if needed
   }
-
 });
+
