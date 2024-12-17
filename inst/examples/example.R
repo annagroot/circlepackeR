@@ -1,3 +1,4 @@
+devtools::install_github("annagroot/circlepackeR") # If needed
 library(circlepackeR)
 
 # using json

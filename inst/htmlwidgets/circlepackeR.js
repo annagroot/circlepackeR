@@ -60,7 +60,10 @@ HTMLWidgets.widget({
           .attr("class", "label")
           .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
           .style("display", function(d) { return d.parent === root ? null : "none"; })
-          .text(function(d) { return d.name; });
+          .text(function(d) {
+      return d[x.options.size] ? d.name + " (" + d[x.options.size] + ")" : d.name;
+          });
+
 
       var node = svg.selectAll("circle,text");
 
